@@ -47,6 +47,10 @@ export class UsersService {
         await this.usersRepository.update(id, { hashedRefreshToken });
     }
 
+    async updateLastActivity(id: number) {
+        await this.usersRepository.update(id, { lastActivityAt: new Date() });
+    }
+
     remove(id: number) {
         return this.usersRepository.delete(id);
     }

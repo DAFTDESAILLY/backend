@@ -1,0 +1,44 @@
+﻿
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+
+
+> backend@0.0.1 start:prod
+> node dist/main
+

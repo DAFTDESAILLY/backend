@@ -12,6 +12,15 @@ export class Student {
     @Column({ name: 'full_name' })
     fullName: string;
 
+    @Column({ nullable: true })
+    email: string;
+
+    @Column({ nullable: true })
+    address: string;
+
+    @Column({ name: 'enrollment_id', nullable: true })
+    enrollmentId: string;
+
     @Column({ name: 'birth_date', type: 'date', nullable: true })
     birthDate: Date;
 

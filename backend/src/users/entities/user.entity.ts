@@ -16,6 +16,9 @@ export class User {
   @Column({ name: 'hashed_refresh_token', type: 'varchar', nullable: true })
   hashedRefreshToken: string | null;
 
+  @Column({ name: 'last_activity_at', type: 'timestamp', nullable: true })
+  lastActivityAt: Date | null;
+
   @Column()
   name: string;
 

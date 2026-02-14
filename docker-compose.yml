@@ -24,5 +24,22 @@ services:
     depends_on:
       - mariadb
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USERNAME: school_user
+      DB_PASSWORD: school_password
+      DB_DATABASE: school_db
+    depends_on:
+      - mariadb
+
 volumes:
   school_db_data:

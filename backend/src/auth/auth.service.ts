@@ -1,4 +1,5 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+// backend/src/auth/auth.service.ts
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -23,21 +24,72 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any) {
+    // ✅ MÉTODO CORREGIDO
+    async login(loginDto: LoginDto) {
+        const { email, password } = loginDto;
+
+        // 1. Buscar usuario por email
+        const user = await this.usersService.findByEmail(email);
+
+        if (!user) {
+            throw new UnauthorizedException('Credenciales inválidas');
+        }
+
+        // 2. Verificar password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('Credenciales inválidas');
+        }
+
+        // 3. Generar tokens
         const tokens = await this.getTokens(user.id, user.email);
+
+        // 4. Actualizar refresh token en BD
         await this.updateRefreshToken(user.id, tokens.refresh_token);
-        return tokens;
+
+        // 5. Actualizar última actividad
+        await this.usersService.updateLastActivity(user.id);
+
+        // 6. Retornar tokens + datos del usuario
+        return {
+            ...tokens,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                status: user.status,
+            },
+        };
     }
 
     async register(createUserDto: CreateUserDto) {
+        // Verificar si el email ya existe
+        const existingUser = await this.usersService.findByEmail(createUserDto.email);
+
+        if (existingUser) {
+            throw new UnauthorizedException('El email ya está registrado');
+        }
+
         const newUser = await this.usersService.create(createUserDto);
         const tokens = await this.getTokens(newUser.id, newUser.email);
         await this.updateRefreshToken(newUser.id, tokens.refresh_token);
-        return tokens;
+        await this.usersService.updateLastActivity(newUser.id);
+
+        return {
+            ...tokens,
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+                name: newUser.name,
+                status: newUser.status,
+            },
+        };
     }
 
     async logout(userId: number) {
-        return this.usersService.updateRefreshToken(userId, null);
+        await this.usersService.updateRefreshToken(userId, null);
+        await this.usersService.updateLastActivity(userId); // Clear activity on logout
     }
 
     async refreshTokens(userId: number, rt: string) {
@@ -52,8 +104,8 @@ export class AuthService {
         return tokens;
     }
 
-    async updateRefreshToken(userId: number, rt: string) {
-        const hash = await bcrypt.hash(rt, 10);
+    async updateRefreshToken(userId: number, rt: string | null) {
+        const hash = rt ? await bcrypt.hash(rt, 10) : null;
         await this.usersService.updateRefreshToken(userId, hash);
     }
 
