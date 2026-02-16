@@ -11,13 +11,15 @@ export class CreateStudentDto {
     @IsString()
     lastName: string;
 
-    @IsNotEmpty()
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
     @IsString()
-    email: string;
+    email?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
+    @Transform(({ value }) => value === "" ? undefined : value)
     @IsString()
-    studentId: string; // Frontend sends 'studentId' (enrollment code)
+    studentId?: string; // Frontend sends 'studentId' (enrollment code)
 
     @IsOptional()
     @Transform(({ value }) => value === "" ? undefined : value)

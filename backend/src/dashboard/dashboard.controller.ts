@@ -19,4 +19,15 @@ export class DashboardController {
     getAlerts() {
         return this.dashboardService.getAlerts();
     }
+
+    // Aliases for frontend compatibility
+    @Get('stats')
+    getStats() {
+        return this.dashboardService.getSummary();
+    }
+
+    @Get('activity')
+    getActivity() {
+        return this.dashboardService.getRecentActivity();
+    }
 }

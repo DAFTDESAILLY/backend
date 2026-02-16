@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConsentDto } from './dto/create-consent.dto';
@@ -12,23 +12,43 @@ export class ConsentsService {
         private consentsRepository: Repository<StudentShareConsent>,
     ) { }
 
-    create(createDto: CreateConsentDto) {
-        return this.consentsRepository.save(createDto);
+    async create(createDto: CreateConsentDto) {
+        const consent = this.consentsRepository.create(createDto);
+        return this.consentsRepository.save(consent);
     }
 
-    findAll() {
-        return this.consentsRepository.find();
+    async findAll() {
+        return this.consentsRepository.find({
+            relations: ['student'], // Si quieres cargar relaciones
+        });
     }
 
-    findOne(id: number) {
-        return this.consentsRepository.findOne({ where: { id } });
+    async findOne(id: number) {
+        const consent = await this.consentsRepository.findOne({
+            where: { id },
+            relations: ['student'] // Opcional: cargar relaciones
+        });
+
+        if (!consent) {
+            throw new NotFoundException(`Consent with ID ${id} not found`);
+        }
+
+        return consent;
     }
 
-    update(id: number, updateDto: UpdateConsentDto) {
-        return this.consentsRepository.update(id, updateDto);
+    async update(id: number, updateDto: UpdateConsentDto) {
+        // Verificar que existe antes de actualizar
+        await this.findOne(id);
+
+        await this.consentsRepository.update(id, updateDto);
+        return this.findOne(id);
     }
 
-    remove(id: number) {
-        return this.consentsRepository.delete(id);
+    async remove(id: number) {
+        // Verificar que existe antes de eliminar
+        const consent = await this.findOne(id);
+
+        await this.consentsRepository.delete(id);
+        return { deleted: true, consent };
     }
 }

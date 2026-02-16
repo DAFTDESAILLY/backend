@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseArrayPipe } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
@@ -7,8 +7,16 @@ import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 export class AttendanceController {
     constructor(private readonly attendanceService: AttendanceService) { }
 
+    @Post('batch')
+    createBatch(@Body(new ParseArrayPipe({ items: CreateAttendanceDto })) createDtos: CreateAttendanceDto[]) {
+        return this.attendanceService.createBatch(createDtos);
+    }
+
     @Post()
-    create(@Body() createDto: CreateAttendanceDto) {
+    create(@Body() createDto: CreateAttendanceDto | CreateAttendanceDto[]) {
+        if (Array.isArray(createDto)) {
+            return this.attendanceService.createBatch(createDto);
+        }
         return this.attendanceService.create(createDto);
     }
 

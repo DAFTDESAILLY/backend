@@ -12,4 +12,8 @@ export class CreateSubjectDto {
     @IsOptional()
     @IsBoolean()
     isGeneral?: boolean;
+
+    @IsOptional()
+    @IsString()
+    status?: string;
 }

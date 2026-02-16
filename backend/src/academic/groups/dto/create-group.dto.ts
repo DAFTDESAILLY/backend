@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class CreateGroupDto {
     @IsNotEmpty()
@@ -8,4 +8,8 @@ export class CreateGroupDto {
     @IsNotEmpty()
     @IsString()
     name: string;
+
+    @IsOptional()
+    @IsString()
+    status?: 'active' | 'archived';
 }

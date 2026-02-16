@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ConsentsService } from './consents.service';
 import { CreateConsentDto } from './dto/create-consent.dto';
 import { UpdateConsentDto } from './dto/update-consent.dto';
@@ -17,18 +17,21 @@ export class ConsentsController {
         return this.consentsService.findAll();
     }
 
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.consentsService.findOne(+id);
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.consentsService.findOne(id);
     }
 
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateDto: UpdateConsentDto) {
-        return this.consentsService.update(+id, updateDto);
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateConsentDto) {
+        return this.consentsService.update(id, updateDto);
     }
 
+    // ✅ CORREGIDO - Usa ParseIntPipe para validar
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.consentsService.remove(+id);
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.consentsService.remove(id);
     }
 }

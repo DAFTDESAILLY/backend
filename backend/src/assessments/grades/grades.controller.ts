@@ -12,6 +12,11 @@ export class GradesController {
         return this.gradesService.create(createDto);
     }
 
+    @Post('batch')
+    createBatch(@Body() createDto: CreateGradeDto[]) {
+        return this.gradesService.createBatch(createDto);
+    }
+
     @Get()
     findAll() {
         return this.gradesService.findAll();

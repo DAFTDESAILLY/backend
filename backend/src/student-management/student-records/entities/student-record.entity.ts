@@ -19,7 +19,7 @@ export class StudentRecord {
     @Column({ name: 'context_id' })
     contextId: number;
 
-    @ManyToOne(() => Context, (context) => context.studentRecords)
+    @ManyToOne(() => Context, (context) => context.studentRecords, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'context_id' })
     context: Context;
 

@@ -1,0 +1,13 @@
+Authenticating...
+
+Checking Grade...
+Grades: [
+  {
+    "id": 3,
+    "evaluationItemId": 1,
+    "studentAssignmentId": 2,
+    "score": "9.00",
+    "createdAt": "2026-02-17T05:43:34.563Z",
+    "updatedAt": "2026-02-17T05:43:34.563Z"
+  }
+]

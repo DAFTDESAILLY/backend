@@ -1,13 +1,21 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAttendanceDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    studentAssignmentId: number;
+    studentAssignmentId?: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    subjectId: number;
+    studentId?: number;
+
+    @IsOptional()
+    @IsNumber()
+    groupId?: number;
+
+    @IsOptional()
+    @IsNumber()
+    subjectId?: number;
 
     @IsNotEmpty()
     @IsDateString()
@@ -16,4 +24,8 @@ export class CreateAttendanceDto {
     @IsNotEmpty()
     @IsString()
     status: 'present' | 'absent' | 'late';
+
+    @IsOptional()
+    @IsString()
+    notes?: string;
 }

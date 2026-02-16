@@ -5,6 +5,11 @@ export class CreateAcademicPeriodDto {
     @IsNumber()
     contextId: number;
 
+    // ✅ AGREGAR ESTE CAMPO
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
     @IsNotEmpty()
     @IsString()
     type: string;

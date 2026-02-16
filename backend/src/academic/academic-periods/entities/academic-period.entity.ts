@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { Context } from '../../contexts/entities/context.entity';
 import { Group } from '../../groups/entities/group.entity';
 import { EvaluationItem } from '../../../assessments/evaluations/entities/evaluation-item.entity';
-import { FileEntity } from '../../../files/entities/file.entity'; // Forward ref might be needed
+import { FileEntity } from '../../../files/entities/file.entity';
 import { StudentRecord } from '../../../student-management/student-records/entities/student-record.entity';
 
 @Entity('academic_periods')
@@ -13,9 +13,13 @@ export class AcademicPeriod {
     @Column({ name: 'context_id' })
     contextId: number;
 
-    @ManyToOne(() => Context, (context) => context.academicPeriods)
+    @ManyToOne(() => Context, (context) => context.academicPeriods, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'context_id' })
     context: Context;
+
+    // ✅ AGREGAR ESTE CAMPO
+    @Column()
+    name: string;
 
     @Column()
     type: string;

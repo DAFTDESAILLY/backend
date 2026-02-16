@@ -15,10 +15,10 @@ export class Attendance {
     @JoinColumn({ name: 'student_assignment_id' })
     studentAssignment: StudentAssignment;
 
-    @Column({ name: 'subject_id' })
+    @Column({ name: 'subject_id', nullable: true })
     subjectId: number;
 
-    @ManyToOne(() => Subject, (subject) => subject.attendances)
+    @ManyToOne(() => Subject, (subject) => subject.attendances, { nullable: true })
     @JoinColumn({ name: 'subject_id' })
     subject: Subject;
 
@@ -30,6 +30,9 @@ export class Attendance {
         enum: ['present', 'absent', 'late'],
     })
     status: 'present' | 'absent' | 'late'; // 'present', 'absent', etc.
+
+    @Column({ type: 'text', nullable: true })
+    notes: string;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

@@ -18,16 +18,24 @@ export class AcademicPeriodsService {
         if (status === 'active') {
             const activePeriod = await this.periodsRepository.findOne({
                 where: {
-                    contextId: createAcademicPeriodDto.contextId,
+                    contextId: createAcademicPeriodDto.contextId, // Asegurarnos de usar contextId
                     status: 'active',
                 },
             });
             if (activePeriod) {
-                throw new BadRequestException('Ya existe un periodo activo para este contexto');
+                // throw new BadRequestException('Ya existe un periodo activo para este contexto');
+                // Opcional: Desactivar el anterior automáticamente
+                // await this.periodsRepository.update(activePeriod.id, { status: 'archived' });
             }
         }
 
-        return this.periodsRepository.save(createAcademicPeriodDto);
+        const newPeriod = this.periodsRepository.create({
+            ...createAcademicPeriodDto,
+            startDate: new Date(createAcademicPeriodDto.startDate),
+            endDate: new Date(createAcademicPeriodDto.endDate),
+        });
+
+        return this.periodsRepository.save(newPeriod);
     }
 
     findAll() {

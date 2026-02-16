@@ -38,6 +38,18 @@ export class EvaluationItem {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
+    @Column({ nullable: true })
+    type: string;
+
+    @Column({ name: 'max_score', type: 'decimal', precision: 5, scale: 2, nullable: true })
+    maxScore: number;
+
+    @Column({ name: 'due_date', type: 'datetime', nullable: true })
+    dueDate: Date;
+
+    @Column({ type: 'text', nullable: true })
+    description: string;
+
     @OneToMany(() => Grade, (grade) => grade.evaluationItem)
     grades: Grade[];
 }
