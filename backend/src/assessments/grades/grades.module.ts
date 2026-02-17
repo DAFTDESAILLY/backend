@@ -9,4 +9,4 @@ import { Grade } from './entities/grade.entity';
   controllers: [GradesController],
   providers: [GradesService],
 })
-export class GradesModule { }
+export class GradesModule {}

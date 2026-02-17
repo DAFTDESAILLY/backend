@@ -10,4 +10,4 @@ import { StudentRecordReply } from './entities/student-record-reply.entity';
   controllers: [StudentRecordsController],
   providers: [StudentRecordsService],
 })
-export class StudentRecordsModule { }
+export class StudentRecordsModule {}

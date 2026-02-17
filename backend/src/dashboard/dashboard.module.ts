@@ -7,10 +7,8 @@ import { Group } from '../academic/groups/entities/group.entity';
 import { Attendance } from '../assessments/attendance/entities/attendance.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Student, Group, Attendance])
-  ],
+  imports: [TypeOrmModule.forFeature([Student, Group, Attendance])],
   controllers: [DashboardController],
-  providers: [DashboardService]
+  providers: [DashboardService],
 })
-export class DashboardModule { }
+export class DashboardModule {}

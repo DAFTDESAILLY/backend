@@ -6,8 +6,10 @@ import { StudentAssignment } from './entities/student-assignment.entity';
 import { StudentAssignmentHistory } from './entities/student-assignment-history.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StudentAssignment, StudentAssignmentHistory])],
+  imports: [
+    TypeOrmModule.forFeature([StudentAssignment, StudentAssignmentHistory]),
+  ],
   controllers: [StudentAssignmentsController],
   providers: [StudentAssignmentsService],
 })
-export class StudentAssignmentsModule { }
+export class StudentAssignmentsModule {}

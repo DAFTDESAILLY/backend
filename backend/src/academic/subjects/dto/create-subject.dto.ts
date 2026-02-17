@@ -1,19 +1,25 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateSubjectDto {
-    @IsNotEmpty()
-    @IsNumber()
-    groupId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  groupId: number;
 
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsOptional()
-    @IsBoolean()
-    isGeneral?: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isGeneral?: boolean;
 
-    @IsOptional()
-    @IsString()
-    status?: string;
+  @IsOptional()
+  @IsString()
+  status?: string;
 }

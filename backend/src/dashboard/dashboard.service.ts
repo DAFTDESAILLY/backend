@@ -7,63 +7,70 @@ import { Attendance } from '../assessments/attendance/entities/attendance.entity
 
 @Injectable()
 export class DashboardService {
-    constructor(
-        @InjectRepository(Student)
-        private studentRepository: Repository<Student>,
-        @InjectRepository(Group)
-        private groupRepository: Repository<Group>,
-        @InjectRepository(Attendance)
-        private attendanceRepository: Repository<Attendance>,
-    ) { }
+  constructor(
+    @InjectRepository(Student)
+    private studentRepository: Repository<Student>,
+    @InjectRepository(Group)
+    private groupRepository: Repository<Group>,
+    @InjectRepository(Attendance)
+    private attendanceRepository: Repository<Attendance>,
+  ) {}
 
-    async getSummary() {
-        const studentsCount = await this.studentRepository.count({ where: { status: 'active' } });
-        const groupsCount = await this.groupRepository.count({ where: { status: 'active' } });
+  async getSummary() {
+    const studentsCount = await this.studentRepository.count({
+      where: { status: 'active' },
+    });
+    const groupsCount = await this.groupRepository.count({
+      where: { status: 'active' },
+    });
 
-        const totalAttendance = await this.attendanceRepository.count();
-        const presentAttendance = await this.attendanceRepository.count({ where: { status: 'present' } });
+    const totalAttendance = await this.attendanceRepository.count();
+    const presentAttendance = await this.attendanceRepository.count({
+      where: { status: 'present' },
+    });
 
-        const attendanceRate = totalAttendance > 0
-            ? Math.round((presentAttendance / totalAttendance) * 100)
-            : 0;
+    const attendanceRate =
+      totalAttendance > 0
+        ? Math.round((presentAttendance / totalAttendance) * 100)
+        : 0;
 
-        return {
-            studentsCount,
-            groupsCount,
-            attendanceRate,
-        };
-    }
+    return {
+      studentsCount,
+      groupsCount,
+      attendanceRate,
+    };
+  }
 
-    async getRecentActivity() {
-        // Combinar creación de estudiantes y grupos recientes
-        const recentStudents = await this.studentRepository.find({
-            order: { createdAt: 'DESC' },
-            take: 5,
-        });
+  async getRecentActivity() {
+    // Combinar creación de estudiantes y grupos recientes
+    const recentStudents = await this.studentRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 5,
+    });
 
-        const recentGroups = await this.groupRepository.find({
-            order: { createdAt: 'DESC' },
-            take: 5,
-        });
+    const recentGroups = await this.groupRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 5,
+    });
 
-        const activities = [
-            ...recentStudents.map(s => ({
-                action: `Student Registered: ${s.fullName}`,
-                date: s.createdAt
-            })),
-            ...recentGroups.map(g => ({
-                action: `Group Created: ${g.name}`,
-                date: g.createdAt
-            }))
-        ];
+    const activities = [
+      ...recentStudents.map((s) => ({
+        action: `Student Registered: ${s.fullName}`,
+        date: s.createdAt,
+      })),
+      ...recentGroups.map((g) => ({
+        action: `Group Created: ${g.name}`,
+        date: g.createdAt,
+      })),
+    ];
 
-        // Ordenar por fecha descendente y tomar los últimos 5-10
-        return activities.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 10);
-    }
+    // Ordenar por fecha descendente y tomar los últimos 5-10
+    return activities
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(0, 10);
+  }
 
-    getAlerts() {
-        return [
-            { type: 'info', message: 'System running normally' },
-        ];
-    }
+  getAlerts() {
+    return [{ type: 'info', message: 'System running normally' }];
+  }
 }

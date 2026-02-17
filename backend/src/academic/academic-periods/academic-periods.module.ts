@@ -9,4 +9,4 @@ import { AcademicPeriod } from './entities/academic-period.entity';
   controllers: [AcademicPeriodsController],
   providers: [AcademicPeriodsService],
 })
-export class AcademicPeriodsModule { }
+export class AcademicPeriodsModule {}

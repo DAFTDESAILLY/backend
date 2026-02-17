@@ -1,15 +1,15 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateStudentAssignmentDto {
-    @IsNotEmpty()
-    @IsNumber()
-    studentId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  studentId: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    groupId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  groupId: number;
 
-    @IsOptional()
-    @IsString()
-    status?: 'active' | 'inactive';
+  @IsOptional()
+  @IsString()
+  status?: 'active' | 'inactive';
 }

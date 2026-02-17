@@ -7,4 +7,4 @@ import { AcademicPeriod } from '../academic/academic-periods/entities/academic-p
   imports: [TypeOrmModule.forFeature([AcademicPeriod])],
   providers: [JobsService],
 })
-export class JobsModule { }
+export class JobsModule {}

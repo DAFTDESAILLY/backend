@@ -10,4 +10,4 @@ import { Subject } from '../../academic/subjects/entities/subject.entity';
   controllers: [EvaluationsController],
   providers: [EvaluationsService],
 })
-export class EvaluationsModule { }
+export class EvaluationsModule {}

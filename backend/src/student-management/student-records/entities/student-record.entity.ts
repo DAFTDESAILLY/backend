@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Student } from '../../students/entities/student.entity';
 import { Context } from '../../../academic/contexts/entities/context.entity';
 import { AcademicPeriod } from '../../../academic/academic-periods/entities/academic-period.entity';
@@ -6,52 +15,54 @@ import { StudentRecordReply } from './student-record-reply.entity';
 
 @Entity('student_records')
 export class StudentRecord {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ name: 'student_id' })
-    studentId: number;
+  @Column({ name: 'student_id' })
+  studentId: number;
 
-    @ManyToOne(() => Student, (student) => student.records)
-    @JoinColumn({ name: 'student_id' })
-    student: Student;
+  @ManyToOne(() => Student, (student) => student.records)
+  @JoinColumn({ name: 'student_id' })
+  student: Student;
 
-    @Column({ name: 'context_id' })
-    contextId: number;
+  @Column({ name: 'context_id' })
+  contextId: number;
 
-    @ManyToOne(() => Context, (context) => context.studentRecords, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'context_id' })
-    context: Context;
+  @ManyToOne(() => Context, (context) => context.studentRecords, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'context_id' })
+  context: Context;
 
-    @Column({ name: 'academic_period_id', nullable: true })
-    academicPeriodId: number;
+  @Column({ name: 'academic_period_id', nullable: true })
+  academicPeriodId: number;
 
-    @ManyToOne(() => AcademicPeriod)
-    @JoinColumn({ name: 'academic_period_id' })
-    academicPeriod: AcademicPeriod;
+  @ManyToOne(() => AcademicPeriod)
+  @JoinColumn({ name: 'academic_period_id' })
+  academicPeriod: AcademicPeriod;
 
-    @Column({
-        type: 'enum',
-        enum: ['conducta', 'tutoría', 'médico', 'cognitivo'],
-    })
-    type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+  @Column({
+    type: 'enum',
+    enum: ['conducta', 'tutoría', 'médico', 'cognitivo'],
+  })
+  type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
 
-    @Column({ type: 'text' })
-    description: string;
+  @Column({ type: 'text' })
+  description: string;
 
-    @Column({
-        type: 'enum',
-        enum: ['active', 'archived', 'inactive'],
-        default: 'active',
-    })
-    status: 'active' | 'archived' | 'inactive';
+  @Column({
+    type: 'enum',
+    enum: ['active', 'archived', 'inactive'],
+    default: 'active',
+  })
+  status: 'active' | 'archived' | 'inactive';
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-    @OneToMany(() => StudentRecordReply, (reply) => reply.studentRecord)
-    replies: StudentRecordReply[];
+  @OneToMany(() => StudentRecordReply, (reply) => reply.studentRecord)
+  replies: StudentRecordReply[];
 }

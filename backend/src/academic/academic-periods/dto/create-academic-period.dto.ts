@@ -1,32 +1,38 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateAcademicPeriodDto {
-    @IsNotEmpty()
-    @IsNumber()
-    contextId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  contextId: number;
 
-    // ✅ AGREGAR ESTE CAMPO
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  // ✅ AGREGAR ESTE CAMPO
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    type: string;
+  @IsNotEmpty()
+  @IsString()
+  type: string;
 
-    @IsNotEmpty()
-    @IsDateString()
-    startDate: string;
+  @IsNotEmpty()
+  @IsDateString()
+  startDate: string;
 
-    @IsNotEmpty()
-    @IsDateString()
-    endDate: string;
+  @IsNotEmpty()
+  @IsDateString()
+  endDate: string;
 
-    @IsOptional()
-    @IsNumber()
-    gracePeriodDays?: number;
+  @IsOptional()
+  @IsNumber()
+  gracePeriodDays?: number;
 
-    @IsOptional()
-    @IsString()
-    status?: 'active' | 'archived';
+  @IsOptional()
+  @IsString()
+  status?: 'active' | 'archived';
 }

@@ -1,35 +1,36 @@
 import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
-export class CreateEvaluationDto { // Matching 'evaluations' module
-    @IsNotEmpty()
-    @IsNumber()
-    subjectId: number;
+export class CreateEvaluationDto {
+  // Matching 'evaluations' module
+  @IsNotEmpty()
+  @IsNumber()
+  subjectId: number;
 
-    @IsOptional()
-    @IsNumber()
-    academicPeriodId?: number;
+  @IsOptional()
+  @IsNumber()
+  academicPeriodId?: number;
 
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    weight: number;
+  @IsNotEmpty()
+  @IsNumber()
+  weight: number;
 
-    @IsOptional()
-    @IsString()
-    type?: string;
+  @IsOptional()
+  @IsString()
+  type?: string;
 
-    @IsOptional()
-    @IsNumber()
-    maxScore?: number;
+  @IsOptional()
+  @IsNumber()
+  maxScore?: number;
 
-    @IsOptional()
-    @IsString()
-    dueDate?: string;
+  @IsOptional()
+  @IsString()
+  dueDate?: string;
 
-    @IsOptional()
-    @IsString()
-    description?: string;
+  @IsOptional()
+  @IsString()
+  description?: string;
 }

@@ -7,28 +7,28 @@ import { StudentRecord } from './entities/student-record.entity';
 
 @Injectable()
 export class StudentRecordsService {
-    constructor(
-        @InjectRepository(StudentRecord)
-        private recordsRepository: Repository<StudentRecord>,
-    ) { }
+  constructor(
+    @InjectRepository(StudentRecord)
+    private recordsRepository: Repository<StudentRecord>,
+  ) {}
 
-    create(createDto: CreateStudentRecordDto) {
-        return this.recordsRepository.save(createDto);
-    }
+  create(createDto: CreateStudentRecordDto) {
+    return this.recordsRepository.save(createDto);
+  }
 
-    findAll() {
-        return this.recordsRepository.find();
-    }
+  findAll() {
+    return this.recordsRepository.find();
+  }
 
-    findOne(id: number) {
-        return this.recordsRepository.findOne({ where: { id } });
-    }
+  findOne(id: number) {
+    return this.recordsRepository.findOne({ where: { id } });
+  }
 
-    update(id: number, updateDto: UpdateStudentRecordDto) {
-        return this.recordsRepository.update(id, updateDto);
-    }
+  update(id: number, updateDto: UpdateStudentRecordDto) {
+    return this.recordsRepository.update(id, updateDto);
+  }
 
-    remove(id: number) {
-        return this.recordsRepository.delete(id);
-    }
+  remove(id: number) {
+    return this.recordsRepository.delete(id);
+  }
 }

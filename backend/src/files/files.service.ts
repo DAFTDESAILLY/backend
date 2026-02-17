@@ -7,28 +7,28 @@ import { FileEntity } from './entities/file.entity';
 
 @Injectable()
 export class FilesService {
-    constructor(
-        @InjectRepository(FileEntity)
-        private filesRepository: Repository<FileEntity>,
-    ) { }
+  constructor(
+    @InjectRepository(FileEntity)
+    private filesRepository: Repository<FileEntity>,
+  ) {}
 
-    create(createFileDto: CreateFileDto) {
-        return this.filesRepository.save(createFileDto);
-    }
+  create(createFileDto: CreateFileDto) {
+    return this.filesRepository.save(createFileDto);
+  }
 
-    findAll() {
-        return this.filesRepository.find();
-    }
+  findAll() {
+    return this.filesRepository.find();
+  }
 
-    findOne(id: number) {
-        return this.filesRepository.findOne({ where: { id } });
-    }
+  findOne(id: number) {
+    return this.filesRepository.findOne({ where: { id } });
+  }
 
-    update(id: number, updateFileDto: UpdateFileDto) {
-        return this.filesRepository.update(id, updateFileDto);
-    }
+  update(id: number, updateFileDto: UpdateFileDto) {
+    return this.filesRepository.update(id, updateFileDto);
+  }
 
-    remove(id: number) {
-        return this.filesRepository.delete(id);
-    }
+  remove(id: number) {
+    return this.filesRepository.delete(id);
+  }
 }

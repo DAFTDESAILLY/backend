@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
@@ -11,49 +19,49 @@ import type { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
-    @Public()
-    @Post('register')
-    @HttpCode(HttpStatus.CREATED)
-    register(@Body() createUserDto: CreateUserDto) {
-        return this.authService.register(createUserDto);
-    }
+  @Public()
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
 
-    @Public()
-    @Post('login')
-    @HttpCode(HttpStatus.OK)
-    login(@Body() loginDto: LoginDto) {
-        return this.authService.login(loginDto);
-    }
+  @Public()
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
 
-    @Public()
-    @UseGuards(AuthGuard('jwt-refresh'))
-    @Post('refresh')
-    @HttpCode(HttpStatus.OK)
-    refresh(@Req() req: Request) {
-        const user = req.user as any;
-        return this.authService.refreshTokens(user.sub, user.refreshToken);
-    }
+  @Public()
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refresh(@Req() req: Request) {
+    const user = req.user as any;
+    return this.authService.refreshTokens(user.sub, user.refreshToken);
+  }
 
-    @Post('logout')
-    @HttpCode(HttpStatus.OK)
-    logout(@Req() req: Request) {
-        const user = req.user as any;
-        return this.authService.logout(user.sub);
-    }
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Req() req: Request) {
+    const user = req.user as any;
+    return this.authService.logout(user.sub);
+  }
 
-    @Public()
-    @Post('forgot-password')
-    forgotPassword() {
-        // Mock implementation
-        return { message: 'Password recovery email sent (mock)' };
-    }
+  @Public()
+  @Post('forgot-password')
+  forgotPassword() {
+    // Mock implementation
+    return { message: 'Password recovery email sent (mock)' };
+  }
 
-    @Public()
-    @Post('reset-password')
-    resetPassword() {
-        // Mock implementation
-        return { message: 'Password reset successful (mock)' };
-    }
+  @Public()
+  @Post('reset-password')
+  resetPassword() {
+    // Mock implementation
+    return { message: 'Password reset successful (mock)' };
+  }
 }

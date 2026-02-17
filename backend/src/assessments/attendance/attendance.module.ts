@@ -11,4 +11,4 @@ import { Subject } from '../../academic/subjects/entities/subject.entity';
   controllers: [AttendanceController],
   providers: [AttendanceService],
 })
-export class AttendanceModule { }
+export class AttendanceModule {}
