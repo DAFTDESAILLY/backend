@@ -6,8 +6,10 @@ import { StudentShareConsent } from './entities/student-share-consent.entity';
 import { StudentShareConsentType } from './entities/student-share-consent-type.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StudentShareConsent, StudentShareConsentType])],
+  imports: [
+    TypeOrmModule.forFeature([StudentShareConsent, StudentShareConsentType]),
+  ],
   controllers: [ConsentsController],
   providers: [ConsentsService],
 })
-export class ConsentsModule { }
+export class ConsentsModule {}

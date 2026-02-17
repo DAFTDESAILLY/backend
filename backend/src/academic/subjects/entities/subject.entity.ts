@@ -1,35 +1,44 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Group } from '../../groups/entities/group.entity';
 import { EvaluationItem } from '../../../assessments/evaluations/entities/evaluation-item.entity';
 import { Attendance } from '../../../assessments/attendance/entities/attendance.entity';
 
 @Entity('subjects')
 export class Subject {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ name: 'group_id' })
-    groupId: number;
+  @Column({ name: 'group_id' })
+  groupId: number;
 
-    @ManyToOne(() => Group, (group) => group.subjects)
-    @JoinColumn({ name: 'group_id' })
-    group: Group;
+  @ManyToOne(() => Group, (group) => group.subjects)
+  @JoinColumn({ name: 'group_id' })
+  group: Group;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({ name: 'is_general', default: true })
-    isGeneral: boolean;
+  @Column({ name: 'is_general', default: true })
+  isGeneral: boolean;
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-    @OneToMany(() => EvaluationItem, (item) => item.subject)
-    evaluationItems: EvaluationItem[];
+  @OneToMany(() => EvaluationItem, (item) => item.subject)
+  evaluationItems: EvaluationItem[];
 
-    @OneToMany(() => Attendance, (attendance) => attendance.subject)
-    attendances: Attendance[];
+  @OneToMany(() => Attendance, (attendance) => attendance.subject)
+  attendances: Attendance[];
 }

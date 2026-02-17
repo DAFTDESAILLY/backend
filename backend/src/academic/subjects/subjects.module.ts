@@ -10,4 +10,4 @@ import { Subject } from './entities/subject.entity';
   providers: [SubjectsService],
   exports: [SubjectsService], // Export for GroupsModule
 })
-export class SubjectsModule { }
+export class SubjectsModule {}

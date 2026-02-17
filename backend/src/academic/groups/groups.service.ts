@@ -8,36 +8,36 @@ import { SubjectsService } from '../subjects/subjects.service';
 
 @Injectable()
 export class GroupsService {
-    constructor(
-        @InjectRepository(Group)
-        private groupsRepository: Repository<Group>,
-        private subjectsService: SubjectsService,
-    ) { }
+  constructor(
+    @InjectRepository(Group)
+    private groupsRepository: Repository<Group>,
+    private subjectsService: SubjectsService,
+  ) {}
 
-    async create(createGroupDto: CreateGroupDto) {
-        const group = await this.groupsRepository.save(createGroupDto);
-        // Regla: Se crea automáticamente la materia "General" al crear un grupo
-        await this.subjectsService.create({
-            groupId: group.id,
-            name: 'General',
-            isGeneral: true,
-        });
-        return group;
-    }
+  async create(createGroupDto: CreateGroupDto) {
+    const group = await this.groupsRepository.save(createGroupDto);
+    // Regla: Se crea automáticamente la materia "General" al crear un grupo
+    await this.subjectsService.create({
+      groupId: group.id,
+      name: 'General',
+      isGeneral: true,
+    });
+    return group;
+  }
 
-    findAll() {
-        return this.groupsRepository.find();
-    }
+  findAll() {
+    return this.groupsRepository.find();
+  }
 
-    findOne(id: number) {
-        return this.groupsRepository.findOne({ where: { id } });
-    }
+  findOne(id: number) {
+    return this.groupsRepository.findOne({ where: { id } });
+  }
 
-    update(id: number, updateGroupDto: UpdateGroupDto) {
-        return this.groupsRepository.update(id, updateGroupDto);
-    }
+  update(id: number, updateGroupDto: UpdateGroupDto) {
+    return this.groupsRepository.update(id, updateGroupDto);
+  }
 
-    remove(id: number) {
-        return this.groupsRepository.delete(id);
-    }
+  remove(id: number) {
+    return this.groupsRepository.delete(id);
+  }
 }

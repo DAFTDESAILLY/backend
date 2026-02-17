@@ -13,10 +13,10 @@ import { RefreshToken } from './refresh-token.entity';
   imports: [
     TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
-    JwtModule.register({})
+    JwtModule.register({}),
   ],
   controllers: [AuthController],
   providers: [AuthService, AtStrategy, RtStrategy],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

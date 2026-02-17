@@ -9,4 +9,4 @@ import { Context } from './entities/context.entity';
   controllers: [ContextsController],
   providers: [ContextsService],
 })
-export class ContextsModule { }
+export class ContextsModule {}

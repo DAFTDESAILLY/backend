@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Context } from '../../contexts/entities/context.entity';
 import { Group } from '../../groups/entities/group.entity';
 import { EvaluationItem } from '../../../assessments/evaluations/entities/evaluation-item.entity';
@@ -7,48 +16,50 @@ import { StudentRecord } from '../../../student-management/student-records/entit
 
 @Entity('academic_periods')
 export class AcademicPeriod {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ name: 'context_id' })
-    contextId: number;
+  @Column({ name: 'context_id' })
+  contextId: number;
 
-    @ManyToOne(() => Context, (context) => context.academicPeriods, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'context_id' })
-    context: Context;
+  @ManyToOne(() => Context, (context) => context.academicPeriods, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'context_id' })
+  context: Context;
 
-    // ✅ AGREGAR ESTE CAMPO
-    @Column()
-    name: string;
+  // ✅ AGREGAR ESTE CAMPO
+  @Column()
+  name: string;
 
-    @Column()
-    type: string;
+  @Column()
+  type: string;
 
-    @Column({ name: 'start_date', type: 'date' })
-    startDate: Date;
+  @Column({ name: 'start_date', type: 'date' })
+  startDate: Date;
 
-    @Column({ name: 'end_date', type: 'date' })
-    endDate: Date;
+  @Column({ name: 'end_date', type: 'date' })
+  endDate: Date;
 
-    @Column({ name: 'grace_period_days', default: 0 })
-    gracePeriodDays: number;
+  @Column({ name: 'grace_period_days', default: 0 })
+  gracePeriodDays: number;
 
-    @Column({
-        type: 'enum',
-        enum: ['active', 'archived'],
-        default: 'active',
-    })
-    status: 'active' | 'archived';
+  @Column({
+    type: 'enum',
+    enum: ['active', 'archived'],
+    default: 'active',
+  })
+  status: 'active' | 'archived';
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-    @OneToMany(() => Group, (group) => group.academicPeriod)
-    groups: Group[];
+  @OneToMany(() => Group, (group) => group.academicPeriod)
+  groups: Group[];
 
-    @OneToMany(() => EvaluationItem, (item) => item.academicPeriod)
-    evaluationItems: EvaluationItem[];
+  @OneToMany(() => EvaluationItem, (item) => item.academicPeriod)
+  evaluationItems: EvaluationItem[];
 }

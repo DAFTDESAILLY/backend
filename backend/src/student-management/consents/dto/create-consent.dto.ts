@@ -1,19 +1,19 @@
 import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateConsentDto {
-    @IsNotEmpty()
-    @IsNumber()
-    studentId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  studentId: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    fromUserId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  fromUserId: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    toUserId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  toUserId: number;
 
-    @IsNotEmpty()
-    @IsDateString()
-    expiresAt: string;
+  @IsNotEmpty()
+  @IsDateString()
+  expiresAt: string;
 }

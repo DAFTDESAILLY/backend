@@ -7,28 +7,28 @@ import { Context } from './entities/context.entity';
 
 @Injectable()
 export class ContextsService {
-    constructor(
-        @InjectRepository(Context)
-        private contextsRepository: Repository<Context>,
-    ) { }
+  constructor(
+    @InjectRepository(Context)
+    private contextsRepository: Repository<Context>,
+  ) {}
 
-    create(createContextDto: CreateContextDto) {
-        return this.contextsRepository.save(createContextDto);
-    }
+  create(createContextDto: CreateContextDto) {
+    return this.contextsRepository.save(createContextDto);
+  }
 
-    findAll() {
-        return this.contextsRepository.find();
-    }
+  findAll() {
+    return this.contextsRepository.find();
+  }
 
-    findOne(id: number) {
-        return this.contextsRepository.findOne({ where: { id } });
-    }
+  findOne(id: number) {
+    return this.contextsRepository.findOne({ where: { id } });
+  }
 
-    update(id: number, updateContextDto: UpdateContextDto) {
-        return this.contextsRepository.update(id, updateContextDto);
-    }
+  update(id: number, updateContextDto: UpdateContextDto) {
+    return this.contextsRepository.update(id, updateContextDto);
+  }
 
-    remove(id: number) {
-        return this.contextsRepository.delete(id);
-    }
+  remove(id: number) {
+    return this.contextsRepository.delete(id);
+  }
 }

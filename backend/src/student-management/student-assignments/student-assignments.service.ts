@@ -8,50 +8,52 @@ import { StudentAssignmentHistory } from './entities/student-assignment-history.
 
 @Injectable()
 export class StudentAssignmentsService {
-    constructor(
-        @InjectRepository(StudentAssignment)
-        private assignmentsRepository: Repository<StudentAssignment>,
-        @InjectRepository(StudentAssignmentHistory)
-        private historyRepository: Repository<StudentAssignmentHistory>,
-    ) { }
+  constructor(
+    @InjectRepository(StudentAssignment)
+    private assignmentsRepository: Repository<StudentAssignment>,
+    @InjectRepository(StudentAssignmentHistory)
+    private historyRepository: Repository<StudentAssignmentHistory>,
+  ) {}
 
-    async create(createDto: CreateStudentAssignmentDto) {
-        // Regla: Alumno activo solo una vez por grupo (validación backend)
-        const activeAssignment = await this.assignmentsRepository.findOne({
-            where: {
-                studentId: createDto.studentId,
-                groupId: createDto.groupId,
-                status: 'active', // Assuming 'active' is the status for active assignment
-            },
-        });
+  async create(createDto: CreateStudentAssignmentDto) {
+    // Regla: Alumno activo solo una vez por grupo (validación backend)
+    const activeAssignment = await this.assignmentsRepository.findOne({
+      where: {
+        studentId: createDto.studentId,
+        groupId: createDto.groupId,
+        status: 'active', // Assuming 'active' is the status for active assignment
+      },
+    });
 
-        if (activeAssignment) {
-            throw new BadRequestException('El estudiante ya tiene una asignación activa en este grupo');
-        }
-
-        const assignment = await this.assignmentsRepository.save(createDto);
-
-        // Record history (initial assignment)
-        // Need logged in user ID for 'performedBy' - usually passed from controller or context.
-        // For now skipping or using system default if not passed.
-        // Ideally create method should accept userId.
-
-        return assignment;
+    if (activeAssignment) {
+      throw new BadRequestException(
+        'El estudiante ya tiene una asignación activa en este grupo',
+      );
     }
 
-    findAll() {
-        return this.assignmentsRepository.find();
-    }
+    const assignment = await this.assignmentsRepository.save(createDto);
 
-    findOne(id: number) {
-        return this.assignmentsRepository.findOne({ where: { id } });
-    }
+    // Record history (initial assignment)
+    // Need logged in user ID for 'performedBy' - usually passed from controller or context.
+    // For now skipping or using system default if not passed.
+    // Ideally create method should accept userId.
 
-    update(id: number, updateDto: UpdateStudentAssignmentDto) {
-        return this.assignmentsRepository.update(id, updateDto);
-    }
+    return assignment;
+  }
 
-    remove(id: number) {
-        return this.assignmentsRepository.delete(id);
-    }
+  findAll() {
+    return this.assignmentsRepository.find();
+  }
+
+  findOne(id: number) {
+    return this.assignmentsRepository.findOne({ where: { id } });
+  }
+
+  update(id: number, updateDto: UpdateStudentAssignmentDto) {
+    return this.assignmentsRepository.update(id, updateDto);
+  }
+
+  remove(id: number) {
+    return this.assignmentsRepository.delete(id);
+  }
 }

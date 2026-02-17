@@ -10,4 +10,4 @@ import { SubjectsModule } from '../subjects/subjects.module'; // To create subje
   controllers: [GroupsController],
   providers: [GroupsService],
 })
-export class GroupsModule { }
+export class GroupsModule {}

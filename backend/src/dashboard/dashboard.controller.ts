@@ -3,31 +3,31 @@ import { DashboardService } from './dashboard.service';
 
 @Controller('dashboard')
 export class DashboardController {
-    constructor(private readonly dashboardService: DashboardService) { }
+  constructor(private readonly dashboardService: DashboardService) {}
 
-    @Get('summary')
-    getSummary() {
-        return this.dashboardService.getSummary();
-    }
+  @Get('summary')
+  getSummary() {
+    return this.dashboardService.getSummary();
+  }
 
-    @Get('recent-activity')
-    getRecentActivity() {
-        return this.dashboardService.getRecentActivity();
-    }
+  @Get('recent-activity')
+  getRecentActivity() {
+    return this.dashboardService.getRecentActivity();
+  }
 
-    @Get('alerts')
-    getAlerts() {
-        return this.dashboardService.getAlerts();
-    }
+  @Get('alerts')
+  getAlerts() {
+    return this.dashboardService.getAlerts();
+  }
 
-    // Aliases for frontend compatibility
-    @Get('stats')
-    getStats() {
-        return this.dashboardService.getSummary();
-    }
+  // Aliases for frontend compatibility
+  @Get('stats')
+  getStats() {
+    return this.dashboardService.getSummary();
+  }
 
-    @Get('activity')
-    getActivity() {
-        return this.dashboardService.getRecentActivity();
-    }
+  @Get('activity')
+  getActivity() {
+    return this.dashboardService.getRecentActivity();
+  }
 }
