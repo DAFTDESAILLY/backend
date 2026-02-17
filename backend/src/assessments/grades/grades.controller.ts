@@ -22,6 +22,11 @@ export class GradesController {
         return this.gradesService.findAll();
     }
 
+    @Get('by-evaluation/:evaluationItemId')
+    findByEvaluation(@Param('evaluationItemId') evaluationItemId: string) {
+        return this.gradesService.findByEvaluation(+evaluationItemId);
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.gradesService.findOne(+id);

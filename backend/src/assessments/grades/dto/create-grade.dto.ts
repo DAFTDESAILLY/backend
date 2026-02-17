@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateGradeDto {
     @IsNotEmpty()
@@ -12,4 +12,8 @@ export class CreateGradeDto {
     @IsNotEmpty()
     @IsNumber()
     score: number;
+
+    @IsOptional()
+    @IsString()
+    feedback?: string;
 }
