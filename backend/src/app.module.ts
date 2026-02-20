@@ -40,7 +40,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
         password: configService.get<string>('DB_PASSWORD', ''),
         database: configService.get<string>('DB_DATABASE', 'school_db'),
         autoLoadEntities: true,
-        synchronize: false, // Set to false in production
+        synchronize:
+          configService.get<string>('NODE_ENV') !== 'production',
+        //  false Set to false in production
       }),
       inject: [ConfigService],
     }),
