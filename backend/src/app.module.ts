@@ -43,6 +43,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
         synchronize:
           configService.get<string>('NODE_ENV') !== 'production',
         //  false Set to false in production
+        extra: {
+          connectionLimit: 10,
+          connectTimeout: 60000,
+          ssl: configService.get<string>('NODE_ENV') === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
+        },
       }),
       inject: [ConfigService],
     }),
