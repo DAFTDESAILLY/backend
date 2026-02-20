@@ -1,8 +1,7 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "cd backend && npm install"
+builder = "DOCKERFILE"
+dockerfilePath = "backend/Dockerfile"
 
 [deploy]
-startCommand = "cd backend && npm run start:dev"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
