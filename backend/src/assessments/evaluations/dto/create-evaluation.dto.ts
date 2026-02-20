@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional, Min } from 'class-validator';
 
 export class CreateEvaluationDto { // Matching 'evaluations' module
     @IsNotEmpty()
@@ -15,6 +15,7 @@ export class CreateEvaluationDto { // Matching 'evaluations' module
 
     @IsNotEmpty()
     @IsNumber()
+    @Min(0)
     weight: number;
 
     @IsOptional()
@@ -23,6 +24,7 @@ export class CreateEvaluationDto { // Matching 'evaluations' module
 
     @IsOptional()
     @IsNumber()
+    @Min(1)
     maxScore?: number;
 
     @IsOptional()

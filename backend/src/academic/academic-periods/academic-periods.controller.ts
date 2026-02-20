@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { AcademicPeriodsService } from './academic-periods.service';
 import { CreateAcademicPeriodDto } from './dto/create-academic-period.dto';
 import { UpdateAcademicPeriodDto } from './dto/update-academic-period.dto';
@@ -13,8 +13,9 @@ export class AcademicPeriodsController {
     }
 
     @Get()
-    findAll() {
-        return this.academicPeriodsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.academicPeriodsService.findAll(userId);
     }
 
     @Get(':id')

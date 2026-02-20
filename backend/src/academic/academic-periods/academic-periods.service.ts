@@ -38,8 +38,13 @@ export class AcademicPeriodsService {
         return this.periodsRepository.save(newPeriod);
     }
 
-    findAll() {
-        return this.periodsRepository.find();
+    findAll(userId: number) {
+        return this.periodsRepository.find({
+            where: {
+                context: { userId }
+            },
+            relations: ['context']
+        });
     }
 
     findOne(id: number) {

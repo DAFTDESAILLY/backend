@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsObject } from 'class-validator';
 
 export class CreateSubjectDto {
     @IsNotEmpty()
@@ -14,6 +14,6 @@ export class CreateSubjectDto {
     isGeneral?: boolean;
 
     @IsOptional()
-    @IsString()
-    status?: string;
+    @IsObject()
+    gradingScale?: Record<string, number>;
 }

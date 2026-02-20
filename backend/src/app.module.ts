@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -39,7 +40,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
         password: configService.get<string>('DB_PASSWORD', ''),
         database: configService.get<string>('DB_DATABASE', 'school_db'),
         autoLoadEntities: true,
-        synchronize: true, // Set to false in production
+        synchronize: false, // Set to false in production
       }),
       inject: [ConfigService],
     }),

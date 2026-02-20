@@ -3,13 +3,17 @@ import { PartialType } from '@nestjs/mapped-types';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateStudentDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    firstName: string;
+    firstName?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    lastName: string;
+    lastName?: string;
+
+    @IsOptional()
+    @IsString()
+    fullName?: string;
 
     @IsOptional()
     @Transform(({ value }) => value === "" ? undefined : value)

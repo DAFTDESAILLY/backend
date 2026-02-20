@@ -23,9 +23,13 @@ export class CreateAttendanceDto {
 
     @IsNotEmpty()
     @IsString()
-    status: 'present' | 'absent' | 'late';
+    status: 'present' | 'absent' | 'late' | 'excused';
 
     @IsOptional()
     @IsString()
     notes?: string;
+
+    @IsOptional()
+    @IsNumber()
+    userId?: number;
 }

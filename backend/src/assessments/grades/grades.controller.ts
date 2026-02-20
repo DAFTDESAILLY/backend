@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
 import { GradesService } from './grades.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
@@ -18,8 +18,34 @@ export class GradesController {
     }
 
     @Get()
-    findAll() {
-        return this.gradesService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.gradesService.findAll(userId);
+    }
+
+    @Get('student-assignment/:id')
+    findByStudentAssignment(@Param('id') id: string) {
+        return this.gradesService.findByStudentAssignment(+id);
+    }
+
+    @Get('student-assignment/:id/average')
+    getStudentAssignmentAverage(@Param('id') id: string, @Query('subjectId') subjectId?: string) {
+        return this.gradesService.calculateStudentAverage(+id, subjectId ? +subjectId : undefined);
+    }
+
+    @Get('evaluation-item/:id')
+    findByEvaluationItem(@Param('id') id: string) {
+        return this.gradesService.findByEvaluationItem(+id);
+    }
+
+    @Get('subject/:subjectId/averages')
+    getSubjectAverages(@Param('subjectId') subjectId: string) {
+        return this.gradesService.calculateSubjectAverages(+subjectId);
+    }
+
+    @Get('group/:groupId/averages')
+    getGroupAverages(@Param('groupId') groupId: string) {
+        return this.gradesService.calculateGroupAverages(+groupId);
     }
 
     @Get(':id')

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { EvaluationsService } from './evaluations.service';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto';
 import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
@@ -13,8 +13,14 @@ export class EvaluationsController {
     }
 
     @Get()
-    findAll() {
-        return this.evaluationsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.evaluationsService.findAll(userId);
+    }
+
+    @Get('subject/:subjectId')
+    findBySubject(@Param('subjectId') subjectId: string) {
+        return this.evaluationsService.findBySubject(+subjectId);
     }
 
     @Get(':id')

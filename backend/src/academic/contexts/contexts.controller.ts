@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { ContextsService } from './contexts.service';
 import { CreateContextDto } from './dto/create-context.dto';
 import { UpdateContextDto } from './dto/update-context.dto';
@@ -13,8 +13,9 @@ export class ContextsController {
     }
 
     @Get()
-    findAll() {
-        return this.contextsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.contextsService.findAll(userId);
     }
 
     @Get(':id')

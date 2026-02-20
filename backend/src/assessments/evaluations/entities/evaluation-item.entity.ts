@@ -50,6 +50,13 @@ export class EvaluationItem {
     @Column({ type: 'text', nullable: true })
     description: string;
 
+    @Column({
+        type: 'varchar',
+        length: 20,
+        default: 'pending'
+    })
+    status: 'pending' | 'completed';
+
     @OneToMany(() => Grade, (grade) => grade.evaluationItem)
     grades: Grade[];
 }

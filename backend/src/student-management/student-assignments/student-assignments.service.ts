@@ -39,8 +39,26 @@ export class StudentAssignmentsService {
         return assignment;
     }
 
-    findAll() {
-        return this.assignmentsRepository.find();
+    findAll(userId: number) {
+        return this.assignmentsRepository.find({
+            where: {
+                group: {
+                    academicPeriod: {
+                        context: {
+                            userId
+                        }
+                    }
+                }
+            },
+            relations: ['student', 'group', 'group.subjects', 'grades']
+        });
+    }
+
+    findByStudent(studentId: number) {
+        return this.assignmentsRepository.find({
+            where: { studentId },
+            relations: ['group', 'group.subjects', 'grades', 'grades.evaluationItem']
+        });
     }
 
     findOne(id: number) {

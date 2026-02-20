@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { StudentRecordsService } from './student-records.service';
 import { CreateStudentRecordDto } from './dto/create-student-record.dto';
 import { UpdateStudentRecordDto } from './dto/update-student-record.dto';
@@ -13,8 +13,9 @@ export class StudentRecordsController {
     }
 
     @Get()
-    findAll() {
-        return this.recordsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.recordsService.findAll(userId);
     }
 
     @Get(':id')

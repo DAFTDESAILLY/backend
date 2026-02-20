@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { StudentAssignment } from '../../../student-management/student-assignments/entities/student-assignment.entity';
 import { Subject } from '../../../academic/subjects/entities/subject.entity';
+import { User } from '../../../users/entities/user.entity';
 
 @Entity('attendance')
 @Index(['studentAssignmentId', 'date'])
@@ -10,6 +11,13 @@ export class Attendance {
 
     @Column({ name: 'student_assignment_id' })
     studentAssignmentId: number;
+
+    @Column({ name: 'user_id' })
+    userId: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @ManyToOne(() => StudentAssignment, (assignment) => assignment.attendances)
     @JoinColumn({ name: 'student_assignment_id' })
@@ -27,9 +35,9 @@ export class Attendance {
 
     @Column({
         type: 'enum',
-        enum: ['present', 'absent', 'late'],
+        enum: ['present', 'absent', 'late', 'excused'],
     })
-    status: 'present' | 'absent' | 'late'; // 'present', 'absent', etc.
+    status: 'present' | 'absent' | 'late' | 'excused';
 
     @Column({ type: 'text', nullable: true })
     notes: string;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -13,8 +13,9 @@ export class GroupsController {
     }
 
     @Get()
-    findAll() {
-        return this.groupsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.groupsService.findAll(userId);
     }
 
     @Get(':id')

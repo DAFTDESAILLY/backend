@@ -16,8 +16,8 @@ export class FilesService {
         return this.filesRepository.save(createFileDto);
     }
 
-    findAll() {
-        return this.filesRepository.find();
+    findAll(userId: number) {
+        return this.filesRepository.find({ where: { userId } });
     }
 
     findOne(id: number) {

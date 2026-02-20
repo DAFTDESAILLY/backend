@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
@@ -13,8 +13,9 @@ export class SubjectsController {
     }
 
     @Get()
-    findAll() {
-        return this.subjectsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.subjectsService.findAll(userId);
     }
 
     @Get(':id')

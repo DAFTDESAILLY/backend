@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
@@ -8,13 +8,21 @@ export class StudentsController {
     constructor(private readonly studentsService: StudentsService) { }
 
     @Post()
-    create(@Body() createStudentDto: CreateStudentDto) {
-        return this.studentsService.create(createStudentDto);
+    create(@Body() createStudentDto: CreateStudentDto, @Req() req: any) {
+        // Obtenemos el userId del token
+        const userId = req.user ? req.user['sub'] : null;
+        return this.studentsService.create(createStudentDto, userId);
+    }
+
+    @Get('group/:groupId')
+    async getStudentsByGroup(@Param('groupId') groupId: number) {
+        return this.studentsService.getStudentsByGroup(groupId);
     }
 
     @Get()
-    findAll() {
-        return this.studentsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.studentsService.findAll(userId);
     }
 
     @Get(':id')

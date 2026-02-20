@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, BadRequestException, Req } from '@nestjs/common';
 import { ConsentsService } from './consents.service';
 import { CreateConsentDto } from './dto/create-consent.dto';
 import { UpdateConsentDto } from './dto/update-consent.dto';
@@ -13,8 +13,9 @@ export class ConsentsController {
     }
 
     @Get()
-    findAll() {
-        return this.consentsService.findAll();
+    findAll(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.consentsService.findAll(userId);
     }
 
     // ✅ CORREGIDO - Usa ParseIntPipe para validar

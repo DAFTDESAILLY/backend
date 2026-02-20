@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 
 @Controller('dashboard')
@@ -6,13 +6,15 @@ export class DashboardController {
     constructor(private readonly dashboardService: DashboardService) { }
 
     @Get('summary')
-    getSummary() {
-        return this.dashboardService.getSummary();
+    getSummary(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.dashboardService.getSummary(userId);
     }
 
     @Get('recent-activity')
-    getRecentActivity() {
-        return this.dashboardService.getRecentActivity();
+    getRecentActivity(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.dashboardService.getRecentActivity(userId);
     }
 
     @Get('alerts')
@@ -22,12 +24,25 @@ export class DashboardController {
 
     // Aliases for frontend compatibility
     @Get('stats')
-    getStats() {
-        return this.dashboardService.getSummary();
+    getStats(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.dashboardService.getSummary(userId);
     }
 
     @Get('activity')
-    getActivity() {
-        return this.dashboardService.getRecentActivity();
+    getActivity(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.dashboardService.getRecentActivity(userId);
+    }
+
+    // Debug endpoint
+    @Get('debug')
+    async getDebug(@Req() req: any) {
+        const userId = req.user['sub'];
+        return {
+            userId,
+            userFromToken: req.user,
+            summary: await this.dashboardService.getSummary(userId)
+        };
     }
 }

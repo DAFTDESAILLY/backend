@@ -25,8 +25,17 @@ export class GroupsService {
         return group;
     }
 
-    findAll() {
-        return this.groupsRepository.find();
+    findAll(userId: number) {
+        return this.groupsRepository.find({
+            where: {
+                academicPeriod: {
+                    context: {
+                        userId
+                    }
+                }
+            },
+            relations: ['academicPeriod', 'academicPeriod.context']
+        });
     }
 
     findOne(id: number) {

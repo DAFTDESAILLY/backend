@@ -17,8 +17,12 @@ export class ConsentsService {
         return this.consentsRepository.save(consent);
     }
 
-    async findAll() {
+    async findAll(userId: number) {
         return this.consentsRepository.find({
+            where: [
+                { fromUserId: userId },
+                { toUserId: userId }
+            ],
             relations: ['student'], // Si quieres cargar relaciones
         });
     }

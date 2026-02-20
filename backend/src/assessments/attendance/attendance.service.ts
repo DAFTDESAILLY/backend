@@ -18,15 +18,25 @@ export class AttendanceService {
         private subjectRepository: Repository<Subject>,
     ) { }
 
-    async create(createDto: CreateAttendanceDto) {
+    async create(createDto: CreateAttendanceDto, userId: number) {
         await this.resolveStudentAssignment(createDto);
+        // Ensure date is in YYYY-MM-DD format to avoid MySQL errors
+        if (createDto.date && typeof createDto.date === 'string' && createDto.date.includes('T')) {
+            createDto.date = createDto.date.split('T')[0];
+        }
+        createDto.userId = userId;
         return this.attendanceRepository.save(createDto);
     }
 
-    async createBatch(createDtos: CreateAttendanceDto[]) {
+    async createBatch(createDtos: CreateAttendanceDto[], userId: number) {
         // Resolver assignment IDs for all items
         for (const dto of createDtos) {
             await this.resolveStudentAssignment(dto);
+            // Ensure date is in YYYY-MM-DD format to avoid MySQL errors
+            if (dto.date && typeof dto.date === 'string' && dto.date.includes('T')) {
+                dto.date = dto.date.split('T')[0];
+            }
+            dto.userId = userId;
         }
         return this.attendanceRepository.save(createDtos);
     }
@@ -63,8 +73,50 @@ export class AttendanceService {
         }
     }
 
-    findAll() {
-        return this.attendanceRepository.find();
+    async findAll(userId: number, filters?: any) {
+        const whereConditions: any = {
+            userId: userId
+        };
+
+        // Apply additional filters if provided
+        if (filters) {
+            if (filters.subjectId) {
+                whereConditions.subjectId = filters.subjectId;
+            }
+            if (filters.date) {
+                whereConditions.date = filters.date;
+            }
+        }
+
+        // Get attendances with related data
+        const queryBuilder = this.attendanceRepository
+            .createQueryBuilder('attendance')
+            .leftJoinAndSelect('attendance.studentAssignment', 'studentAssignment')
+            .leftJoinAndSelect('studentAssignment.student', 'student')
+            .leftJoinAndSelect('studentAssignment.group', 'group')
+            .leftJoinAndSelect('attendance.subject', 'subject')
+            .leftJoinAndSelect('attendance.user', 'user')
+            .where('attendance.userId = :userId', { userId });
+
+        // Apply additional filters
+        if (filters?.subjectId) {
+            queryBuilder.andWhere('attendance.subjectId = :subjectId', { subjectId: filters.subjectId });
+        }
+        if (filters?.date) {
+            queryBuilder.andWhere('attendance.date = :date', { date: filters.date });
+        }
+        if (filters?.groupId) {
+            queryBuilder.andWhere('group.id = :groupId', { groupId: filters.groupId });
+        }
+        if (filters?.studentId) {
+            queryBuilder.andWhere('student.id = :studentId', { studentId: filters.studentId });
+        }
+
+        queryBuilder.orderBy('attendance.date', 'DESC');
+
+        const attendances = await queryBuilder.getMany();
+
+        return attendances;
     }
 
     findOne(id: number) {

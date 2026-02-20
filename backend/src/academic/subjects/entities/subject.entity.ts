@@ -32,4 +32,7 @@ export class Subject {
 
     @OneToMany(() => Attendance, (attendance) => attendance.subject)
     attendances: Attendance[];
+
+    @Column({ type: 'json', nullable: true, name: 'grading_scale' })
+    gradingScale: Record<string, number>;
 }

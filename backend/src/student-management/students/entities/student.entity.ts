@@ -1,13 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { StudentAssignment } from '../../student-assignments/entities/student-assignment.entity';
 import { StudentRecord } from '../../student-records/entities/student-record.entity';
 import { StudentShareConsent } from '../../consents/entities/student-share-consent.entity';
 import { FileEntity } from '../../../files/entities/file.entity';
+import { User } from '../../../users/entities/user.entity';
 
 @Entity('students')
 export class Student {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column({ name: 'created_by', nullable: true })
+    createdBy: number;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'created_by' })
+    creator: User;
 
     @Column({ name: 'full_name' })
     fullName: string;

@@ -16,8 +16,10 @@ export class ContextsService {
         return this.contextsRepository.save(createContextDto);
     }
 
-    findAll() {
-        return this.contextsRepository.find();
+    findAll(userId: number) {
+        return this.contextsRepository.find({
+            where: { userId }
+        });
     }
 
     findOne(id: number) {

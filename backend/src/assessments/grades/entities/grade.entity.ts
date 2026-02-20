@@ -25,6 +25,9 @@ export class Grade {
     @Column({ type: 'decimal', precision: 5, scale: 2 })
     score: number;
 
+    @Column({ type: 'text', nullable: true })
+    feedback: string | null;
+
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 

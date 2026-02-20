@@ -16,8 +16,19 @@ export class SubjectsService {
         return this.subjectsRepository.save(createSubjectDto);
     }
 
-    findAll() {
-        return this.subjectsRepository.find();
+    findAll(userId: number) {
+        return this.subjectsRepository.find({
+            where: {
+                group: {
+                    academicPeriod: {
+                        context: {
+                            userId
+                        }
+                    }
+                }
+            },
+            relations: ['group', 'group.academicPeriod', 'group.academicPeriod.context']
+        });
     }
 
     findOne(id: number) {

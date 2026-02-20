@@ -1,6 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
+import * as crypto from 'node:crypto';
+
+// Polyfill for global.crypto in Node.js 18 (required by TypeORM/uuid)
+if (!global.crypto) {
+  // @ts-ignore
+  global.crypto = crypto;
+}
 
 async function bootstrap() {
   try {
@@ -16,7 +23,7 @@ async function bootstrap() {
     // Enable global validation
     app.useGlobalPipes(new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false,
       transform: true,
       exceptionFactory: (errors) => {
         console.log('VALIDATION ERRORS:', JSON.stringify(errors, null, 2));
