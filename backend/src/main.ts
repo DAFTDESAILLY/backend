@@ -13,28 +13,35 @@ async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
 
-    // Enable CORS
+    // CORS para producción y desarrollo
     app.enableCors({
-      origin: 'http://localhost:4200',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      origin: true,
       credentials: true,
     });
 
-    // Enable global validation
-    app.useGlobalPipes(new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: false,
-      transform: true,
-      exceptionFactory: (errors) => {
-        console.log('VALIDATION ERRORS:', JSON.stringify(errors, null, 2));
-        return new BadRequestException(errors);
-      }
-    }));
+    // Validaciones globales
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: false,
+        transform: true,
+        exceptionFactory: (errors) => {
+          console.log('VALIDATION ERRORS:', JSON.stringify(errors, null, 2));
+          return new BadRequestException(errors);
+        },
+      }),
+    );
 
-    await app.listen(process.env.PORT ?? 3000);
+    const port = process.env.PORT || 3000;
+
+    // 🔥 Importante para Railway / Docker
+    await app.listen(port, '0.0.0.0');
+
+    console.log(`🚀 Application running on port ${port}`);
   } catch (error) {
     console.error('BOOTSTRAP ERROR:', error);
     process.exit(1);
   }
 }
+
 bootstrap();
