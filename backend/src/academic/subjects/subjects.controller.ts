@@ -24,7 +24,7 @@ export class SubjectsController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
+    update(@Param('id') id: string, @Body() updateSubjectDto: any) {
         return this.subjectsService.update(+id, updateSubjectDto);
     }
 

@@ -28,10 +28,14 @@ export class FileEntity {
     @Column({ name: 'file_type' })
     fileType: string;
 
+    @Column({ name: 'file_size', nullable: true })
+    fileSize: number;
+
     @Column({
         name: 'file_category',
         type: 'enum',
         enum: ['evidence', 'material', 'planning'],
+        default: 'material'
     })
     fileCategory: 'evidence' | 'material' | 'planning';
 

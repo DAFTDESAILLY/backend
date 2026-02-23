@@ -20,52 +20,61 @@ export class DashboardService {
     ) { }
 
     async getSummary(userId: number) {
-        // Count active groups for the user
-        const groupsCount = await this.groupRepository.createQueryBuilder('group')
-            .innerJoin('group.academicPeriod', 'period')
-            .innerJoin('period.context', 'context')
-            .where('context.userId = :userId', { userId })
-            .andWhere('group.status = :status', { status: 'active' })
-            .getCount();
+        // As of now, role is not implemented on users table. 
+        // We will default isAdmin to false, or add a proper check if roles are implemented later.
+        const isAdmin = false; // TODO: Implement proper admin check if needed
 
-        // Count distinct active students for the user
-        const result = await this.studentAssignmentRepository.createQueryBuilder('assignment')
-            .innerJoin('assignment.group', 'group')
-            .innerJoin('group.academicPeriod', 'period')
-            .innerJoin('period.context', 'context')
-            .where('context.userId = :userId', { userId })
-            .andWhere('assignment.status = :status', { status: 'active' })
-            .select('COUNT(DISTINCT assignment.student_id)', 'count')
-            .getRawOne();
-        
-        const studentsCount = parseInt(result?.count || '0', 10);
+        let totalStudents = 0;
+        let totalGroups = 0;
+        let totalSubjects = 0;
+        let activePeriods = 0;
 
-        // Attendance stats for user's groups
-        const totalAttendance = await this.attendanceRepository.createQueryBuilder('attendance')
-            .innerJoin('attendance.studentAssignment', 'assignment')
-            .innerJoin('assignment.group', 'group')
-            .innerJoin('group.academicPeriod', 'period')
-            .innerJoin('period.context', 'context')
-            .where('context.userId = :userId', { userId })
-            .getCount();
+        // Por practicidad actual: los periodos activos son globales
+        const periodsCountResult = await this.studentRepository.manager.query(`
+            SELECT COUNT(*) as count FROM academic_periods WHERE status = 'active'
+        `);
+        activePeriods = parseInt(periodsCountResult[0].count);
 
-        const presentAttendance = await this.attendanceRepository.createQueryBuilder('attendance')
-            .innerJoin('attendance.studentAssignment', 'assignment')
-            .innerJoin('assignment.group', 'group')
-            .innerJoin('group.academicPeriod', 'period')
-            .innerJoin('period.context', 'context')
-            .where('context.userId = :userId', { userId })
-            .andWhere('attendance.status = :status', { status: 'present' })
-            .getCount();
+        if (isAdmin) {
+            // Admin ve todo
+            const sCount = await this.studentRepository.manager.query(`SELECT COUNT(*) as count FROM students`);
+            totalStudents = parseInt(sCount[0].count);
 
-        const attendanceRate = totalAttendance > 0
-            ? Math.round((presentAttendance / totalAttendance) * 100)
-            : 0;
+            const gCount = await this.groupRepository.manager.query(`SELECT COUNT(*) as count FROM groups`);
+            totalGroups = parseInt(gCount[0].count);
+
+            const subCount = await this.studentRepository.manager.query(`SELECT COUNT(*) as count FROM subjects`);
+            totalSubjects = parseInt(subCount[0].count);
+        } else {
+            // El profesor solo ve lo que tiene asignado
+            // 1. Grupos asignados (a través de subjects o directamente dependiendo del esquema, usamos materias como base)
+            const subjectsParams = await this.studentRepository.manager.query(`
+                SELECT id, group_id FROM subjects WHERE teacher_id = ?
+            `, [userId]);
+
+            totalSubjects = subjectsParams.length;
+
+            if (totalSubjects > 0) {
+                const groupIds = [...new Set(subjectsParams.map((s: any) => s.group_id))].filter(id => id);
+                totalGroups = groupIds.length;
+
+                if (totalGroups > 0) {
+                    const placeholders = groupIds.map(() => '?').join(',');
+                    const studentsParams = await this.studentRepository.manager.query(`
+                        SELECT COUNT(DISTINCT student_id) as count FROM student_assignments 
+                        WHERE group_id IN (${placeholders}) AND status = 'active'
+                     `, groupIds);
+                    totalStudents = parseInt(studentsParams[0].count);
+                }
+            }
+        }
 
         return {
-            studentsCount,
-            groupsCount,
-            attendanceRate,
+            totalStudents,
+            totalGroups,
+            totalSubjects,
+            activePeriods,
+            isAdmin
         };
     }
 

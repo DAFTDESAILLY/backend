@@ -35,8 +35,29 @@ export class SubjectsService {
         return this.subjectsRepository.findOne({ where: { id } });
     }
 
-    update(id: number, updateSubjectDto: UpdateSubjectDto) {
-        return this.subjectsRepository.update(id, updateSubjectDto);
+    async update(id: number, rawData: any) {
+        console.log(`[SubjectsService] Actualizando materia ${id} con payload:`, rawData);
+
+        // Si incluye gradingScale, asegurarnos de forzar su guardado saltándonos los bugs de TypeORM
+        if (rawData.gradingScale) {
+            console.log(`[SubjectsService] Forzando escritura de gradingScale en DB:`, rawData.gradingScale);
+            await this.subjectsRepository.query(
+                `UPDATE subjects SET grading_scale = ? WHERE id = ?`,
+                [JSON.stringify(rawData.gradingScale), id]
+            );
+        }
+
+        const subject = await this.subjectsRepository.findOne({ where: { id } });
+        if (subject) {
+            // Asignar el resto de las propiedades si existen
+            const { gradingScale, ...rest } = rawData;
+            if (Object.keys(rest).length > 0) {
+                Object.assign(subject, rest);
+                await this.subjectsRepository.save(subject);
+            }
+            return this.subjectsRepository.findOne({ where: { id } }); // Devolver el registro completo actualizado
+        }
+        return this.subjectsRepository.update(id, rawData);
     }
 
     remove(id: number) {

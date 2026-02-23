@@ -12,8 +12,14 @@ export class FilesService {
         private filesRepository: Repository<FileEntity>,
     ) { }
 
-    create(createFileDto: CreateFileDto) {
-        return this.filesRepository.save(createFileDto);
+    async create(createFileData: any): Promise<FileEntity> {
+        // Enforce the default category if none provided
+        const fileToSave = {
+            ...createFileData,
+            fileCategory: createFileData.fileCategory || 'material'
+        };
+        const newFile = this.filesRepository.create(fileToSave as Partial<FileEntity>);
+        return await this.filesRepository.save(newFile);
     }
 
     findAll(userId: number) {

@@ -1,21 +1,71 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Req, Res, NotFoundException } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import * as fs from 'fs';
+import type { Response } from 'express';
 
 @Controller('files')
 export class FilesController {
     constructor(private readonly filesService: FilesService) { }
 
     @Post('upload')
-    @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
-        // Here we would handle file storage (local/S3) and then save metadata
-        // For now, mapping Multer file to DTO
-        // const createDto = ...
-        // return this.filesService.create(createDto);
-        return { message: 'File uploaded (mock)', file };
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+                cb(null, `${randomName}${extname(file.originalname)}`);
+            }
+        })
+    }))
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+        if (!file) {
+            throw new NotFoundException('No file uploaded');
+        }
+
+        const userId = req.user['sub'];
+        const metadata = {
+            userId: userId,
+            fileName: file.originalname,
+            storageKey: file.filename, // Physical name in ./uploads
+            fileType: file.originalname.split('.').pop()?.toLowerCase() || 'unknown',
+            fileSize: file.size,
+            fileCategory: 'material'
+        };
+
+        const savedFile = await this.filesService.create(metadata);
+
+        // Map correctly to frontend expectations
+        const responseFile = {
+            id: savedFile.id,
+            name: savedFile.fileName,
+            type: savedFile.fileType,
+            size: savedFile.fileSize || 0,
+            url: `/api/files/${savedFile.id}/download`,
+            uploadedBy: savedFile.userId,
+            createdAt: savedFile.createdAt
+        };
+
+        return { message: 'File uploaded successfully', file: responseFile };
+    }
+
+    @Get(':id/download')
+    async downloadFile(@Param('id') id: string, @Res() res: Response) {
+        const fileRecord = await this.filesService.findOne(+id);
+        if (!fileRecord) {
+            throw new NotFoundException('File metadata not found in database');
+        }
+
+        const filePath = `./uploads/${fileRecord.storageKey}`;
+        if (!fs.existsSync(filePath)) {
+            throw new NotFoundException('Physical file not found on disk');
+        }
+
+        res.download(filePath, fileRecord.fileName);
     }
 
     @Post()
