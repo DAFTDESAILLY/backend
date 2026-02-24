@@ -60,7 +60,7 @@ export class FilesController {
             throw new NotFoundException('File metadata not found in database');
         }
 
-        const filePath = `./uploads/${fileRecord.storageKey}`;
+        const filePath = require('path').join(process.cwd(), 'uploads', fileRecord.storageKey);
         if (!fs.existsSync(filePath)) {
             throw new NotFoundException('Physical file not found on disk');
         }

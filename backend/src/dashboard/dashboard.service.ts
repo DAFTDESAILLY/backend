@@ -49,7 +49,12 @@ export class DashboardService {
             // El profesor solo ve lo que tiene asignado
             // 1. Grupos asignados (a través de subjects o directamente dependiendo del esquema, usamos materias como base)
             const subjectsParams = await this.studentRepository.manager.query(`
-                SELECT id, group_id FROM subjects WHERE teacher_id = ?
+                SELECT s.id, s.group_id 
+                FROM subjects s
+                INNER JOIN groups g ON s.group_id = g.id
+                INNER JOIN academic_periods p ON g.academic_period_id = p.id
+                INNER JOIN contexts c ON p.context_id = c.id
+                WHERE c.user_id = ?
             `, [userId]);
 
             totalSubjects = subjectsParams.length;
