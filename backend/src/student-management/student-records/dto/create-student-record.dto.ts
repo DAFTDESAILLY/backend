@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateStudentRecordDto {
@@ -12,7 +12,14 @@ export class CreateStudentRecordDto {
 
     @IsNotEmpty()
     @IsString()
-    type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+    type: string;
+
+    @IsOptional()
+    @IsString()
+    title?: string;
+
+    @IsOptional()
+    date?: Date;
 
     @IsNotEmpty()
     @IsString()

@@ -35,10 +35,18 @@ export class SubjectsService {
         return this.subjectsRepository.findOne({ where: { id } });
     }
 
-    async update(id: number, updateSubjectDto: any) {
+    async update(id: number, updateSubjectDto: UpdateSubjectDto) {
         console.log(`[SubjectsService] Actualizando materia ${id} con payload:`, updateSubjectDto);
 
-        await this.subjectsRepository.update(id, updateSubjectDto);
+        // Preload para parsear correctamente las columnas JSON antes de hacer el query a MySQL
+        const preloaded = await this.subjectsRepository.preload({
+            id,
+            ...updateSubjectDto
+        });
+
+        if (preloaded) {
+            await this.subjectsRepository.save(preloaded);
+        }
 
         return this.subjectsRepository.findOne({
             where: { id },

@@ -13,6 +13,9 @@ export class FileEntity {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
+    @Column({ name: 'folder_id', nullable: true })
+    folderId: number;
+
     @Column({ name: 'student_id', nullable: true })
     studentId: number;
 

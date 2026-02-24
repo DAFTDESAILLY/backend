@@ -22,7 +22,7 @@ export class FilesController {
             }
         })
     }))
-    async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @Body('folderId') folderId: string, @Req() req: any) {
         if (!file) {
             throw new NotFoundException('No file uploaded');
         }
@@ -34,7 +34,8 @@ export class FilesController {
             storageKey: file.filename, // Physical name in ./uploads
             fileType: file.originalname.split('.').pop()?.toLowerCase() || 'unknown',
             fileSize: file.size,
-            fileCategory: 'material'
+            fileCategory: 'material',
+            folderId: folderId ? parseInt(folderId, 10) : null
         };
 
         const savedFile = await this.filesService.create(metadata);
@@ -47,6 +48,7 @@ export class FilesController {
             size: savedFile.fileSize || 0,
             url: `/api/files/${savedFile.id}/download`,
             uploadedBy: savedFile.userId,
+            folderId: savedFile.folderId,
             createdAt: savedFile.createdAt
         };
 
@@ -77,6 +79,24 @@ export class FilesController {
     findAll(@Req() req: any) {
         const userId = req.user['sub'];
         return this.filesService.findAll(userId);
+    }
+
+    // --- FOLDERS ---
+    @Post('folders')
+    createFolder(@Body() createFolderDto: any, @Req() req: any) {
+        const userId = req.user['sub'];
+        return this.filesService.createFolder(createFolderDto, userId);
+    }
+
+    @Get('folders')
+    findFolders(@Req() req: any) {
+        const userId = req.user['sub'];
+        return this.filesService.findFolders(userId);
+    }
+
+    @Delete('folders/:id')
+    removeFolder(@Param('id') id: string) {
+        return this.filesService.removeFolder(+id);
     }
 
     @Get(':id')

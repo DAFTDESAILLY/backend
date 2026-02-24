@@ -32,9 +32,15 @@ export class StudentRecord {
 
     @Column({
         type: 'enum',
-        enum: ['conducta', 'tutoría', 'médico', 'cognitivo'],
+        enum: ['conducta', 'tutoría', 'médico', 'cognitivo', 'familiar', 'académico'],
     })
-    type: 'conducta' | 'tutoría' | 'médico' | 'cognitivo';
+    type: string;
+
+    @Column({ name: 'date', type: 'date', nullable: true })
+    date: Date;
+
+    @Column({ length: 255, nullable: true })
+    title: string;
 
     @Column({ type: 'text' })
     description: string;
