@@ -7,6 +7,7 @@ import { StudentRecord } from './entities/student-record.entity';
 import { Context } from '../../academic/contexts/entities/context.entity';
 import { Student } from '../students/entities/student.entity';
 import { FilesService } from '../../files/files.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 import * as fs from 'fs';
 import * as path from 'path';
 const PDFDocument = require('pdfkit');
@@ -21,6 +22,7 @@ export class StudentRecordsService {
         @InjectRepository(Student)
         private studentRepository: Repository<Student>,
         private filesService: FilesService,
+        private notificationsService: NotificationsService,
     ) { }
 
     async create(createDto: CreateStudentRecordDto, userId: number) {
@@ -113,6 +115,18 @@ export class StudentRecordsService {
             } catch (error) {
                 console.error('Error al generar el PDF del expediente:', error);
                 // Si el PDF falla, no detenemos la respuesta general del guardado del expediente, pero lo registramos.
+            }
+
+            // TRIGGER DE NOTIFICACIÓN KIISS
+            // Si el record es disciplinario/conductual ('conduct' / 'disciplinary' dependiendo del frontend) o cualquier tipo que requiera alerta
+            if (['conduct', 'disciplinary', 'internal_report'].includes(createDto.type?.toLowerCase())) {
+                await this.notificationsService.create({
+                    userId: userId, // Mandar alerta al maestro
+                    title: 'Nuevo Reporte de Conducta',
+                    message: `Se ha generado un acta de ${createDto.type.toUpperCase()} para el alumno ${student.fullName}. Asunto: ${createDto.title || 'S/A'}.`,
+                    type: 'error',
+                    actionUrl: '/records/students'
+                });
             }
 
             return savedRecord;

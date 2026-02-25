@@ -7,9 +7,13 @@ import { StudentAssignment } from '../../student-management/student-assignments/
 import { EvaluationItem } from '../evaluations/entities/evaluation-item.entity';
 import { Subject } from '../../academic/subjects/entities/subject.entity';
 import { Group } from '../../academic/groups/entities/group.entity';
+import { NotificationsModule } from '../../notifications/notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Grade, StudentAssignment, EvaluationItem, Subject, Group])],
+  imports: [
+    TypeOrmModule.forFeature([Grade, StudentAssignment, EvaluationItem, Subject, Group]),
+    NotificationsModule
+  ],
   controllers: [GradesController],
   providers: [GradesService],
 })

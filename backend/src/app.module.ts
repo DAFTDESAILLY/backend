@@ -24,6 +24,7 @@ import { EvaluationsModule } from './assessments/evaluations/evaluations.module'
 import { GradesModule } from './assessments/grades/grades.module';
 import { AuthModule } from './auth/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     GradesModule,
     AuthModule,
     DashboardModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [

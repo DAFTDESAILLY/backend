@@ -6,6 +6,7 @@ import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { Attendance } from './entities/attendance.entity';
 import { StudentAssignment } from '../../student-management/student-assignments/entities/student-assignment.entity';
 import { Subject } from '../../academic/subjects/entities/subject.entity';
+import { NotificationsService } from '../../notifications/notifications.service';
 
 @Injectable()
 export class AttendanceService {
@@ -16,6 +17,7 @@ export class AttendanceService {
         private studentAssignmentRepository: Repository<StudentAssignment>,
         @InjectRepository(Subject)
         private subjectRepository: Repository<Subject>,
+        private notificationsService: NotificationsService,
     ) { }
 
     async create(createDto: CreateAttendanceDto, userId: number) {
@@ -25,7 +27,9 @@ export class AttendanceService {
             createDto.date = createDto.date.split('T')[0];
         }
         createDto.userId = userId;
-        return this.attendanceRepository.save(createDto);
+        const saved = await this.attendanceRepository.save(createDto);
+        await this.checkAbsences([saved], userId);
+        return saved;
     }
 
     async createBatch(createDtos: CreateAttendanceDto[], userId: number) {
@@ -38,7 +42,9 @@ export class AttendanceService {
             }
             dto.userId = userId;
         }
-        return this.attendanceRepository.save(createDtos);
+        const saved = await this.attendanceRepository.save(createDtos);
+        await this.checkAbsences(saved, userId);
+        return saved;
     }
 
     private async resolveStudentAssignment(dto: CreateAttendanceDto) {
@@ -70,6 +76,27 @@ export class AttendanceService {
             }
 
             dto.studentAssignmentId = assignment.id;
+        }
+    }
+
+    private async checkAbsences(attendances: Attendance[], userId: number) {
+        for (const attendance of attendances) {
+            if (attendance.status === 'absent') {
+                const hydrated = await this.attendanceRepository.findOne({
+                    where: { id: attendance.id },
+                    relations: ['studentAssignment', 'studentAssignment.student', 'subject', 'studentAssignment.group']
+                });
+
+                if (hydrated) {
+                    await this.notificationsService.create({
+                        userId: userId,
+                        title: 'Inasistencia Registrada',
+                        message: `El alumno ${hydrated.studentAssignment.student.fullName} tiene una falta el día ${new Date(hydrated.date).toLocaleDateString()} en la materia ${hydrated.subject?.name || 'General'}.`,
+                        type: 'warning',
+                        actionUrl: '/evaluations/attendance'
+                    });
+                }
+            }
         }
     }
 

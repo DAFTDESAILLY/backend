@@ -5,9 +5,10 @@ import { AttendanceController } from './attendance.controller';
 import { Attendance } from './entities/attendance.entity';
 import { StudentAssignment } from '../../student-management/student-assignments/entities/student-assignment.entity';
 import { Subject } from '../../academic/subjects/entities/subject.entity';
+import { NotificationsModule } from '../../notifications/notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Attendance, StudentAssignment, Subject])],
+  imports: [TypeOrmModule.forFeature([Attendance, StudentAssignment, Subject]), NotificationsModule],
   controllers: [AttendanceController],
   providers: [AttendanceService],
 })

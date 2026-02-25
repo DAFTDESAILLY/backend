@@ -25,7 +25,9 @@ export class SubjectsController {
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
-        return this.subjectsService.update(+id, updateSubjectDto);
+        console.log(`[SubjectsController] update id ${id}, DTO received:`, updateSubjectDto);
+        return { debugProcessedDto: updateSubjectDto };
+        // return this.subjectsService.update(+id, updateSubjectDto);
     }
 
     @Delete(':id')

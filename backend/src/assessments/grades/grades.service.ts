@@ -8,6 +8,7 @@ import { StudentAssignment } from '../../student-management/student-assignments/
 import { EvaluationItem } from '../evaluations/entities/evaluation-item.entity';
 import { Subject } from '../../academic/subjects/entities/subject.entity';
 import { Group } from '../../academic/groups/entities/group.entity';
+import { NotificationsService } from '../../notifications/notifications.service';
 
 @Injectable()
 export class GradesService {
@@ -22,6 +23,7 @@ export class GradesService {
         private subjectRepository: Repository<Subject>,
         @InjectRepository(Group)
         private groupRepository: Repository<Group>,
+        private notificationsService: NotificationsService,
     ) { }
 
     async create(createDto: CreateGradeDto) {
@@ -46,6 +48,7 @@ export class GradesService {
 
         const saved = await this.gradesRepository.save(createDto);
         await this.updateEvaluationStatus(createDto.evaluationItemId);
+        await this.checkLowPerformance(saved.id);
         return saved;
     }
 
@@ -98,6 +101,11 @@ export class GradesService {
             await this.updateEvaluationStatus(id);
         }
 
+        // Checar bajo desempeño en lote
+        for (const res of results) {
+            await this.checkLowPerformance(res.id);
+        }
+
         return results;
     }
 
@@ -141,6 +149,7 @@ export class GradesService {
         const grade = await this.gradesRepository.findOne({ where: { id } });
         if (grade) {
             await this.updateEvaluationStatus(grade.evaluationItemId);
+            await this.checkLowPerformance(grade.id);
         }
         return result;
     }
@@ -187,6 +196,33 @@ export class GradesService {
 
         if (evaluation.status !== newStatus) {
             await this.evaluationItemRepository.update(evaluationItemId, { status: newStatus });
+        }
+    }
+
+    private async checkLowPerformance(gradeId: number) {
+        const grade = await this.gradesRepository.findOne({
+            where: { id: gradeId },
+            relations: ['evaluationItem', 'evaluationItem.subject', 'studentAssignment', 'studentAssignment.student', 'studentAssignment.group', 'studentAssignment.group.academicPeriod', 'studentAssignment.group.academicPeriod.context']
+        });
+
+        if (!grade) return;
+
+        const maxScore = grade.evaluationItem?.maxScore || 100;
+        const scorePercentage = (Number(grade.score) / Number(maxScore)) * 100;
+
+        if (scorePercentage <= 60) {
+            // Find context user to notify
+            const userId = grade.studentAssignment?.group?.academicPeriod?.context?.userId;
+
+            if (userId) {
+                await this.notificationsService.create({
+                    userId: userId,
+                    title: 'Bajo Desempeño Detectado',
+                    message: `El alumno ${grade.studentAssignment.student.fullName} obtuvo una calificación baja (${grade.score}/${maxScore}) en la evaluación "${grade.evaluationItem.name}" de la materia ${grade.evaluationItem.subject.name}.`,
+                    type: 'warning',
+                    actionUrl: '/evaluations/grading'
+                });
+            }
         }
     }
 

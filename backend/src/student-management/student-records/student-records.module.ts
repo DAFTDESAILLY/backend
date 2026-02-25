@@ -7,11 +7,13 @@ import { StudentRecordReply } from './entities/student-record-reply.entity';
 import { Context } from '../../academic/contexts/entities/context.entity';
 import { Student } from '../students/entities/student.entity';
 import { FilesModule } from '../../files/files.module';
+import { NotificationsModule } from '../../notifications/notifications.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([StudentRecord, StudentRecordReply, Context, Student]),
-    FilesModule
+    FilesModule,
+    NotificationsModule
   ],
   controllers: [StudentRecordsController],
   providers: [StudentRecordsService],
