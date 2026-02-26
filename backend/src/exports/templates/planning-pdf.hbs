@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: Letter landscape;
+            margin: 0.4in;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .header div {
+            margin: 2px 0;
+        }
+
+        .header .title {
+            font-size: 14pt;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 0;
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .bg-light-blue {
+            background-color: #85d5e6;
+            font-weight: bold;
+        }
+
+        .bg-teal {
+            background-color: #61c9c4;
+            font-weight: bold;
+        }
+
+        .bg-pink {
+            background-color: #fca7e5;
+            font-weight: bold;
+        }
+
+        .no-bottom-border {
+            border-bottom: none;
+        }
+
+        .no-top-border {
+            border-top: none;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #eee;
+            margin: 10px auto;
+            text-align: center;
+            line-height: 80px;
+            font-size: 10px;
+            border: 1px dashed #ccc;
+        }
+
+        .day-label {
+            font-weight: bold;
+            display: block;
+        }
+
+        .task-label {
+            background-color: #5dc6f9;
+            font-weight: bold;
+            display: inline-block;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .signatures {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .signature-box {
+            width: 30%;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid #000;
+            margin-bottom: 5px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="title">{{colegio}}</div>
+        <div>{{nivel}}</div>
+        <div>{{cct}}</div>
+        <div>{{ciclo}}</div>
+    </div>
+
+    {{#each materiasMapped}}
+    <!-- Info General -->
+    <table {{#if @index}}style="margin-top: 30px;" {{/if}}>
+        <tr>
+            <td class="bg-light-blue" style="width: 20%;">Materia</td>
+            <td style="width: 35%;">{{this.nombreMateria}}</td>
+            <td class="bg-light-blue" style="width: 15%;">Temporalidad</td>
+            <td style="width: 30%;" colspan="2">{{../temporalidad}}</td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue">Nombre del Docente</td>
+            <td>{{../docente}}</td>
+            <td class="bg-light-blue">Grado</td>
+            <td style="width: 10%;">{{../grado}}</td>
+            <td style="width: 20%;"><span class="bg-light-blue" style="padding-right: 10px;">Grupo</span> {{../grupo}}
+            </td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue">Metodología a<br>desarrollar</td>
+            <td colspan="4">{{this.metodologia}}</td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue">Propósitos de grado</td>
+            <td colspan="4">{{this.propositos}}</td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue">Problemática</td>
+            <td colspan="4">{{this.problematica}}</td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue">Proyecto</td>
+            <td colspan="4" class="bold">{{this.proyecto}}</td>
+        </tr>
+    </table>
+
+    <!-- Campo formativo -->
+    <table style="margin-top: 10px;">
+        <tr>
+            <th class="bg-teal center-text" style="width: 20%;">Campo formativo</th>
+            <th class="bg-teal center-text" style="width: 35%;">Contenidos</th>
+            <th class="bg-teal center-text" style="width: 25%;">Procesos de Desarrollo de<br>Aprendizaje (PDA)</th>
+            <th class="bg-teal center-text" style="width: 20%;">Ejes Articuladores</th>
+        </tr>
+        <tr>
+            <td class="center-text">
+                <div class="logo-placeholder">{{this.campoNombre}}</div>
+            </td>
+            <td>
+                {{{this.campoContenidos}}}
+                <div class="bg-light-blue center-text bold" style="margin-top: 20px;">Libros de Texto Gratuito</div>
+                <div>{{{this.campoLibros}}}</div>
+            </td>
+            <td>{{{this.campoProcesos}}}</td>
+            <td>{{{this.campoEjes}}}</td>
+        </tr>
+    </table>
+
+    <!-- Planeación días -->
+    <table>
+        <tr>
+            <td colspan="3" class="bg-teal center-text bold">Desarrollo Semanal / Particularidades de la metodología
+            </td>
+        </tr>
+        <tr>
+            <td class="bg-teal center-text bold" style="width: 20%;">Momentos</td>
+            <td class="bg-teal center-text bold" style="width: 60%;">Sugerencias Didácticas</td>
+            <td class="bg-teal center-text bold" style="width: 20%;">Observaciones</td>
+        </tr>
+
+        {{#each this.dias}}
+        <tr>
+            <td>
+                <span class="day-label">{{this.dia_semana}}</span>
+                <span>{{this.fechaFormateada}}</span>
+                {{#if this.tiempo}}
+                <div style="margin-top: 5px;">Tiempo: {{this.tiempo}}</div>
+                {{/if}}
+                <div class="task-label">Tarea:</div>
+                <div>{{{this.tarea}}}</div>
+            </td>
+            <td>{{{this.sugerencias_didacticas}}}</td>
+            <td>{{{this.observaciones}}}</td>
+        </tr>
+        {{#if this.actividades_extra}}
+        <tr>
+            <td class="bg-light-blue bold" style="border-top: none;">Actividades extra:</td>
+            <td colspan="2" style="border-top: none;">{{{this.actividades_extra}}}</td>
+        </tr>
+        {{/if}}
+        {{/each}}
+    </table>
+
+    <!-- Evaluación -->
+    <table style="margin-top: 15px; margin-bottom: 30px;">
+        <tr>
+            <td colspan="2" class="bg-teal center-text bold" style="width: 60%;">Evaluación formativa:</td>
+            <td class="bg-teal center-text bold" style="width: 20%;">Materiales y recursos didácticos:</td>
+            <td class="bg-teal center-text bold" style="width: 20%;">Relación entre<br>campos<br>formativos</td>
+        </tr>
+        <tr>
+            <td style="width: 30%;">
+                <span class="bold">Indicadores</span><br>
+                {{{this.evaluacionIndicadores}}}
+            </td>
+            <td style="width: 30%;">
+                <span class="bold" style="padding-right: 15px;">Momentos</span><span
+                    class="bold">Herramientas</span><br>
+                <div style="float: left; width: 45%;">{{{this.evaluacionMomentos}}}</div>
+                <div style="float: left; width: 45%; border-left: 1px solid #ccc; padding-left: 5%;">
+                    {{{this.evaluacionHerramientas}}}</div>
+            </td>
+            <td>
+                {{{this.materiales}}}
+            </td>
+            <td>
+                {{{this.relacionCampos}}}
+            </td>
+        </tr>
+        <tr>
+            <td class="bg-light-blue center-text bold">Ajustes razonables</td>
+            <td colspan="3">{{{this.ajustes}}}</td>
+        </tr>
+    </table>
+    {{/each}}
+
+    <div class="signatures">
+        <div class="signature-box">
+            <div style="margin-bottom: 20px;">Elaborado por:</div>
+            <div style="margin-bottom: 10px;">Docente del grupo</div>
+            <div class="signature-line"></div>
+            <div>{{firmaDocente}}</div>
+        </div>
+        <div class="signature-box">
+            <div style="margin-bottom: 20px;">Vo. Bo.</div>
+            <div style="margin-bottom: 10px;">Directora Escolar</div>
+            <div class="signature-line"></div>
+            <div>{{firmaDirectora}}</div>
+        </div>
+        <div class="signature-box">
+            <div style="margin-bottom: 20px;">Vo. Bo</div>
+            <div style="margin-bottom: 10px;">Área Académica</div>
+            <div class="signature-line"></div>
+            <div>{{firmaAcademica}}</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
